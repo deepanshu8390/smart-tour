@@ -7,14 +7,12 @@ export function LocationCard({ location }) {
       <div className="locationCardBody">
         <div className="locationCardMeta">
           <span>{location.type}</span>
-          <span>
-            ⭐ {location.rating} ({location.reviewCount})
-          </span>
+          <span>Rating {location.rating} ({location.reviewCount})</span>
         </div>
         <h3 className="locationCardTitle">{location.name}</h3>
         <p className="locationCardText">{location.shortDescription}</p>
         <Link className="cardLink" href={`/locations/${location.projectId}`}>
-          Explore <span aria-hidden="true">→</span>
+          Explore <span aria-hidden="true">-&gt;</span>
         </Link>
       </div>
     </article>

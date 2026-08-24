@@ -6,6 +6,10 @@ function normalizePage(value, fallback = 1) {
   return Number.isFinite(value ?? NaN) ? Number(value) : fallback;
 }
 
+function isNetworkError(error) {
+  return error instanceof TypeError;
+}
+
 async function requestJson(path, options) {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...(options || {}),
@@ -17,7 +21,14 @@ async function requestJson(path, options) {
   });
 
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`);
+    let message = `Request failed: ${response.status}`;
+    try {
+      const payload = await response.json();
+      if (payload?.message) {
+        message = payload.message;
+      }
+    } catch {}
+    throw new Error(message);
   }
 
   return response.json();
@@ -73,7 +84,10 @@ export async function fetchLocations(params) {
 
   try {
     return await requestJson(`/locations?${query.toString()}`);
-  } catch {
+  } catch (error) {
+    if (!isNetworkError(error)) {
+      throw error;
+    }
     return filterMockLocations(params);
   }
 }
@@ -81,7 +95,10 @@ export async function fetchLocations(params) {
 export async function fetchLocation(projectId) {
   try {
     return await requestJson(`/locations/${projectId}`);
-  } catch {
+  } catch (error) {
+    if (!isNetworkError(error)) {
+      throw error;
+    }
     const fallback = mockLocations.find((location) => location.projectId === projectId);
     if (!fallback) {
       throw new Error("Location not found");
@@ -96,7 +113,10 @@ export async function sendOtp(payload) {
       method: "POST",
       body: JSON.stringify(payload),
     });
-  } catch {
+  } catch (error) {
+    if (!isNetworkError(error)) {
+      throw error;
+    }
     return { message: "OTP sent", devOtp: "123456" };
   }
 }
@@ -107,7 +127,10 @@ export async function verifyOtp(payload) {
       method: "POST",
       body: JSON.stringify(payload),
     });
-  } catch {
+  } catch (error) {
+    if (!isNetworkError(error)) {
+      throw error;
+    }
     return {
       token: "dev-token",
       userId: "dev-user",
@@ -132,7 +155,10 @@ export async function fetchMyBookings(token) {
     if (!response.ok) throw new Error("Failed to load bookings");
     const payload = await response.json();
     return payload.data;
-  } catch {
+  } catch (error) {
+    if (!isNetworkError(error)) {
+      throw error;
+    }
     return mockBookings;
   }
 }
@@ -148,7 +174,14 @@ export async function createBooking(token, payload) {
   });
 
   if (!response.ok) {
-    throw new Error("Booking creation failed");
+    let message = "Booking creation failed";
+    try {
+      const payload = await response.json();
+      if (payload?.message) {
+        message = payload.message;
+      }
+    } catch {}
+    throw new Error(message);
   }
 
   return response.json();

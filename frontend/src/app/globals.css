@@ -182,6 +182,13 @@ input {
   cursor: pointer;
 }
 
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.pager button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .pills {
   display: flex;
   gap: 10px;

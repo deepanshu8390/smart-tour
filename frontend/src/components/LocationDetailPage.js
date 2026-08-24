@@ -16,6 +16,7 @@ export function LocationDetailPage({ projectId }) {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [bookingMessage, setBookingMessage] = useState(null);
   const [bookingError, setBookingError] = useState(null);
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     let mounted = true;
@@ -37,6 +38,11 @@ export function LocationDetailPage({ projectId }) {
 
     if (!auth?.token) {
       setBookingError("Please login before booking.");
+      return;
+    }
+
+    if (!bookingDate) {
+      setBookingError("Please choose a travel date.");
       return;
     }
 
@@ -73,7 +79,7 @@ export function LocationDetailPage({ projectId }) {
                   </h1>
                   <p className="heroCopy">{location.hero.description}</p>
                   <p className="muted">
-                    ⭐ {location.rating} ({location.reviewCount} reviews)
+                    Rating {location.rating} ({location.reviewCount} reviews)
                   </p>
                 </div>
                 <img className="heroImage" src={location.hero.image} alt={location.name} />
@@ -128,6 +134,7 @@ export function LocationDetailPage({ projectId }) {
                         value={bookingDate}
                         onChange={(event) => setBookingDate(event.target.value)}
                         type="date"
+                        min={today}
                         required
                       />
                     </label>
@@ -149,7 +156,7 @@ export function LocationDetailPage({ projectId }) {
                   {bookingMessage ? <div className="notice">{bookingMessage}</div> : null}
                   {bookingError ? <div className="error">{bookingError}</div> : null}
                   <Link href="/login" className="cardLink">
-                    Need to login first? <span aria-hidden="true">→</span>
+                    Need to login first? <span aria-hidden="true">-&gt;</span>
                   </Link>
                 </article>
               </aside>

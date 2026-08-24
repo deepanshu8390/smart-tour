@@ -12,14 +12,25 @@ export function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [requiresLogin, setRequiresLogin] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     const auth = getAuthState();
-    fetchMyBookings(auth?.token)
+
+    if (!auth?.token) {
+      setRequiresLogin(true);
+      setLoading(false);
+      return () => {
+        mounted = false;
+      };
+    }
+
+    fetchMyBookings(auth.token)
       .then((items) => mounted && setBookings(items))
       .catch((err) => mounted && setError(err.message))
       .finally(() => mounted && setLoading(false));
+
     return () => {
       mounted = false;
     };
@@ -37,6 +48,10 @@ export function MyBookingsPage() {
         </div>
         {loading ? (
           <div className="card contentCard">Loading bookings...</div>
+        ) : requiresLogin ? (
+          <div className="notice">
+            Please <Link href="/login">login</Link> to view your bookings.
+          </div>
         ) : error ? (
           <div className="error">{error}</div>
         ) : bookings.length === 0 ? (
@@ -49,7 +64,7 @@ export function MyBookingsPage() {
               <article key={booking.id} className="card contentCard">
                 <strong>{booking.locationName}</strong>
                 <p className="muted">
-                  {booking.bookingDate} • {booking.numberOfPeople} travelers • {booking.status}
+                  {booking.bookingDate} | {booking.numberOfPeople} travelers | {booking.status}
                 </p>
               </article>
             ))}

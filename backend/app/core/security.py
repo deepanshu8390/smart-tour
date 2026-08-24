@@ -4,6 +4,7 @@ from typing import Any
 import jwt
 
 from app.core.config import settings
+from app.core.exceptions import AppError
 
 
 def create_access_token(payload: dict[str, Any]) -> str:
@@ -16,4 +17,7 @@ def create_access_token(payload: dict[str, Any]) -> str:
 
 
 def decode_access_token(token: str) -> dict[str, Any]:
-    return jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+    try:
+        return jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+    except jwt.InvalidTokenError as exc:
+        raise AppError("Invalid or expired token", 401) from exc

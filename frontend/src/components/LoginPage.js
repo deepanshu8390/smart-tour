@@ -17,9 +17,18 @@ export function LoginPage() {
   const [error, setError] = useState(null);
   const [sent, setSent] = useState(false);
 
+  const canSendOtp = name.trim().length >= 2 && countryCode.trim().length > 0 && mobile.trim().length >= 6;
+  const canVerifyOtp = canSendOtp && otp.trim().length >= 4;
+
   async function handleSendOtp() {
     setError(null);
     setMessage(null);
+
+    if (!canSendOtp) {
+      setError("Enter name, country code, and mobile number first.");
+      return;
+    }
+
     try {
       const response = await sendOtp({ name, countryCode, mobile });
       setSent(true);
@@ -32,6 +41,12 @@ export function LoginPage() {
   async function handleVerifyOtp() {
     setError(null);
     setMessage(null);
+
+    if (!canVerifyOtp) {
+      setError("Enter the OTP to continue.");
+      return;
+    }
+
     try {
       const auth = await verifyOtp({ name, countryCode, mobile, otp, role: "USER" });
       setAuthState(auth);
@@ -63,7 +78,7 @@ export function LoginPage() {
               <span>Mobile</span>
               <input value={mobile} onChange={(event) => setMobile(event.target.value)} placeholder="9876543210" />
             </label>
-            <button className="secondaryButton" onClick={handleSendOtp} type="button">
+            <button className="secondaryButton" onClick={handleSendOtp} type="button" disabled={!canSendOtp}>
               Send OTP
             </button>
             {sent ? (
@@ -72,7 +87,7 @@ export function LoginPage() {
                   <span>OTP</span>
                   <input value={otp} onChange={(event) => setOtp(event.target.value)} placeholder="123456" />
                 </label>
-                <button className="primaryButton" onClick={handleVerifyOtp} type="button">
+                <button className="primaryButton" onClick={handleVerifyOtp} type="button" disabled={!canVerifyOtp}>
                   Verify OTP
                 </button>
               </>
@@ -80,7 +95,7 @@ export function LoginPage() {
             {message ? <div className="notice">{message}</div> : null}
             {error ? <div className="error">{error}</div> : null}
             <Link href="/" className="cardLink">
-              Back to home <span aria-hidden="true">→</span>
+              Back to home <span aria-hidden="true">-&gt;</span>
             </Link>
           </div>
         </div>

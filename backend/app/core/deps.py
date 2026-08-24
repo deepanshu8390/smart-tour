@@ -11,6 +11,11 @@ def get_current_user(authorization: str | None = Header(default=None)) -> Curren
 
     token = authorization.removeprefix("Bearer ").strip()
     payload = decode_access_token(token)
+    required_fields = ("userId", "name", "role", "countryCode", "mobile")
+    missing = [field for field in required_fields if field not in payload]
+    if missing:
+        raise AppError("Invalid token payload", 401, {"missing": missing})
+
     return CurrentUser(
         userId=payload["userId"],
         name=payload["name"],

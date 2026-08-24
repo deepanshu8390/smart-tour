@@ -8,11 +8,11 @@ export function HotLocationCard({ location }) {
         <h3 className="hotTitle">{location.name}</h3>
         <p className="ellipsis">{location.shortDescription}</p>
         <div className="rating">
-          <span>⭐ {location.rating}</span>
+          <span>Rating {location.rating}</span>
           <span className="muted">({location.reviewCount} reviews)</span>
         </div>
         <Link className="cardLink" href={`/locations/${location.projectId}`}>
-          Explore <span aria-hidden="true">→</span>
+          Explore <span aria-hidden="true">-&gt;</span>
         </Link>
       </div>
     </article>

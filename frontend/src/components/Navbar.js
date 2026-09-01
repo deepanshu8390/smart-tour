@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { clearAuthState, getAuthState } from "@/services/auth-storage";
+import { clearAuthState, getAuthState } from "../services/auth-storage";
 
 export function Navbar() {
   const [auth, setAuth] = useState(null);

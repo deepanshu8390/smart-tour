@@ -1,12 +1,13 @@
-import { LocationCard } from "@/components/LocationCard";
+import { LocationCard } from "./LocationCard";
 
 export function LocationGrid({ locations, loading, error, page, totalPages, onPrevPage, onNextPage }) {
   return (
     <section id="explore" className="section container">
       <div className="sectionHeading">
         <div>
-          <h2>Popular Destinations</h2>
-          <p>Simple destination cards fed directly from the backend.</p>
+          <div className="eyebrow">Start exploring</div>
+          <h2>Where will you go next?</h2>
+          <p>Compare a few good options, then open the one that feels right.</p>
         </div>
         <div className="pager" aria-label="Pagination controls">
           <button onClick={onPrevPage} disabled={page <= 1 || loading} type="button">
@@ -18,6 +19,12 @@ export function LocationGrid({ locations, loading, error, page, totalPages, onPr
           <button onClick={onNextPage} disabled={page >= totalPages || loading} type="button">
             Next
           </button>
+        </div>
+      </div>
+
+      <div className="toolbar">
+        <div className="resultCount" aria-live="polite">
+          {locations.length ? <><strong>{locations.length}</strong> destinations on this page</> : "No matching destinations"}
         </div>
       </div>
 
@@ -47,9 +54,9 @@ export function LocationGrid({ locations, loading, error, page, totalPages, onPr
           No destinations found for the current search or filter.
         </div>
       ) : (
-        <div className="grid">
-          {locations.map((location) => (
-            <LocationCard key={location.projectId} location={location} />
+        <div className="featuredGrid">
+          {locations.map((location, index) => (
+            <LocationCard key={location.projectId} location={location} featured={index === 0} />
           ))}
         </div>
       )}

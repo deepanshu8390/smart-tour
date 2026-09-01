@@ -11,19 +11,19 @@ export const mockLocations = [
     hero: {
       title: "Experience Goa",
       description: "Explore beaches, nightlife, and coastal culture.",
-      image: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+      image: "/placeholders/goa.svg",
     },
     whyChooseTitle: "Why Choose Goa?",
     whyChooseDescription: "It is ideal for short breaks, group travel, and beach-focused itineraries.",
     images: [
-      { url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Goa beach" },
-      { url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Goa sunset" },
+      { url: "/placeholders/goa.svg", alt: "Goa beach" },
+      { url: "/placeholders/andaman.svg", alt: "Goa sunset style placeholder" },
     ],
     faqs: [
       { question: "Is Goa family friendly?", answer: "Yes, especially for relaxed beach stays and easy sightseeing." },
       { question: "What is included?", answer: "The location page can describe the itinerary, stays, and highlights." },
     ],
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+    imageUrl: "/placeholders/goa.svg",
   },
   {
     projectId: 102,
@@ -37,13 +37,13 @@ export const mockLocations = [
     hero: {
       title: "Visit Manali",
       description: "A mountain destination for relaxation and adventure.",
-      image: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+      image: "/placeholders/manali.svg",
     },
     whyChooseTitle: "Why Choose Manali?",
     whyChooseDescription: "A strong option for scenic trips and adventure-oriented visitors.",
-    images: [{ url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Manali mountains" }],
+    images: [{ url: "/placeholders/manali.svg", alt: "Manali mountains" }],
     faqs: [{ question: "Best season?", answer: "Depends on whether you want snow or clear mountain weather." }],
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+    imageUrl: "/placeholders/manali.svg",
   },
   {
     projectId: 103,
@@ -57,13 +57,13 @@ export const mockLocations = [
     hero: {
       title: "Discover Jaipur",
       description: "A city destination rooted in heritage and culture.",
-      image: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+      image: "/placeholders/jaipur.svg",
     },
     whyChooseTitle: "Why Choose Jaipur?",
     whyChooseDescription: "A good fit for culture-first travel with easy sightseeing loops.",
-    images: [{ url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Jaipur palace" }],
+    images: [{ url: "/placeholders/jaipur.svg", alt: "Jaipur palace" }],
     faqs: [{ question: "Is it good for short trips?", answer: "Yes, the city is easy to cover in a few days." }],
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+    imageUrl: "/placeholders/jaipur.svg",
   },
   {
     projectId: 104,
@@ -77,13 +77,13 @@ export const mockLocations = [
     hero: {
       title: "Go to Rishikesh",
       description: "Adventure by the river with a calm travel pace.",
-      image: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+      image: "/placeholders/rishikesh.svg",
     },
     whyChooseTitle: "Why Choose Rishikesh?",
     whyChooseDescription: "It works well for short adventure trips and wellness-focused travel.",
-    images: [{ url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Rishikesh river" }],
+    images: [{ url: "/placeholders/rishikesh.svg", alt: "Rishikesh river" }],
     faqs: [{ question: "Is rafting included?", answer: "The location detail can describe available activities and packages." }],
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+    imageUrl: "/placeholders/rishikesh.svg",
   },
   {
     projectId: 105,
@@ -97,13 +97,13 @@ export const mockLocations = [
     hero: {
       title: "Explore Andaman",
       description: "A quieter beach destination with island character.",
-      image: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+      image: "/placeholders/andaman.svg",
     },
     whyChooseTitle: "Why Choose Andaman?",
     whyChooseDescription: "A clean choice for scenic and relaxed coastal itineraries.",
-    images: [{ url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Andaman islands" }],
+    images: [{ url: "/placeholders/andaman.svg", alt: "Andaman islands" }],
     faqs: [{ question: "How do I get there?", answer: "The location detail page can explain travel access and booking flow." }],
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+    imageUrl: "/placeholders/andaman.svg",
   },
   {
     projectId: 106,
@@ -117,13 +117,13 @@ export const mockLocations = [
     hero: {
       title: "Travel to Kashmir",
       description: "Scenic landscapes and seasonal mountain travel.",
-      image: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+      image: "/placeholders/kashmir.svg",
     },
     whyChooseTitle: "Why Choose Kashmir?",
     whyChooseDescription: "Great for travelers seeking landscape-driven trips.",
-    images: [{ url: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", alt: "Kashmir valley" }],
+    images: [{ url: "/placeholders/kashmir.svg", alt: "Kashmir valley" }],
     faqs: [{ question: "What makes it special?", answer: "Scenery, seasonal variety, and a strong destination identity." }],
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+    imageUrl: "/placeholders/kashmir.svg",
   },
 ];
 

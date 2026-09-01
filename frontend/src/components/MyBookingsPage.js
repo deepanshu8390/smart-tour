@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
-import { fetchMyBookings } from "@/services/api";
-import { getAuthState } from "@/services/auth-storage";
+import { Footer } from "./Footer";
+import { Navbar } from "./Navbar";
+import { fetchMyBookings } from "../services/api";
+import { getAuthState } from "../services/auth-storage";
 
 export function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);

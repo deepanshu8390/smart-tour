@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { Footer } from "@/components/Footer";
-import { Navbar } from "@/components/Navbar";
-import { sendOtp, verifyOtp } from "@/services/api";
-import { setAuthState } from "@/services/auth-storage";
+import { Footer } from "./Footer";
+import { Navbar } from "./Navbar";
+import { sendOtp, verifyOtp } from "../services/api";
+import { setAuthState } from "../services/auth-storage";
 
 export function LoginPage() {
   const [name, setName] = useState("");

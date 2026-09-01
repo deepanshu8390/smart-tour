@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-import { Footer } from "@/components/Footer";
-import { FilterPills } from "@/components/FilterPills";
-import { Hero } from "@/components/Hero";
-import { HotLocations } from "@/components/HotLocations";
-import { LocationGrid } from "@/components/LocationGrid";
-import { Navbar } from "@/components/Navbar";
-import { fetchLocations } from "@/services/api";
+import { Footer } from "./Footer";
+import { FilterPills } from "./FilterPills";
+import { Hero } from "./Hero";
+import { HotLocations } from "./HotLocations";
+import { LocationGrid } from "./LocationGrid";
+import { Navbar } from "./Navbar";
+import { fetchLocations } from "../services/api";
 
 export function HomePage() {
   const [searchInput, setSearchInput] = useState("");
@@ -66,7 +66,7 @@ export function HomePage() {
 
     fetchLocations({
       page: hotPage,
-      limit: 4,
+      limit: 3,
       sort: "rating_desc",
     })
       .then((response) => {

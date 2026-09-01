@@ -5,11 +5,20 @@ def seed_data() -> None:
     if location_repository.count() > 0:
         return
 
+    placeholders = {
+        "goa": "/placeholders/goa.svg",
+        "manali": "/placeholders/manali.svg",
+        "jaipur": "/placeholders/jaipur.svg",
+        "rishikesh": "/placeholders/rishikesh.svg",
+        "andaman": "/placeholders/andaman.svg",
+        "kashmir": "/placeholders/kashmir.svg",
+    }
+
     location_repository.seed(
         [
             {
                 "projectId": 101,
-                "type": "Beach",
+                "type": "goa",
                 "name": "Goa",
                 "shortDescription": "Beaches, nightlife, and easy coastal escapes.",
                 "description": "Goa blends relaxed beaches, water sports, old forts, and a laid-back travel vibe.",
@@ -19,23 +28,23 @@ def seed_data() -> None:
                 "hero": {
                     "title": "Experience Goa",
                     "description": "Explore beaches, nightlife, and coastal culture.",
-                    "image": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                    "image": placeholders["goa"],
                 },
                 "whyChooseTitle": "Why Choose Goa?",
                 "whyChooseDescription": "It is ideal for short breaks, group travel, and beach-focused itineraries.",
                 "images": [
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Goa beach"},
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Goa sunset"},
+                    {"url": placeholders["goa"], "alt": "Goa beach"},
+                    {"url": placeholders["andaman"], "alt": "Goa sunset style placeholder"},
                 ],
                 "faqs": [
                     {"question": "Is Goa family friendly?", "answer": "Yes, especially for relaxed beach stays and easy sightseeing."},
                     {"question": "What is included?", "answer": "The location page can describe the itinerary, stays, and highlights."},
                 ],
-                "imageUrl": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                "imageUrl": placeholders["goa"],
             },
             {
                 "projectId": 102,
-                "type": "Mountains",
+                "type": "manali",
                 "name": "Manali",
                 "shortDescription": "Snow views, adventure sports, and mountain air.",
                 "description": "Manali is known for alpine scenery, winter travel, and outdoor adventure activities.",
@@ -45,21 +54,21 @@ def seed_data() -> None:
                 "hero": {
                     "title": "Visit Manali",
                     "description": "A mountain destination for relaxation and adventure.",
-                    "image": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                    "image": placeholders["manali"],
                 },
                 "whyChooseTitle": "Why Choose Manali?",
                 "whyChooseDescription": "A strong option for scenic trips and adventure-oriented visitors.",
                 "images": [
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Manali mountains"},
+                    {"url": placeholders["manali"], "alt": "Manali mountains"},
                 ],
                 "faqs": [
                     {"question": "Best season?", "answer": "Depends on whether you want snow or clear mountain weather."},
                 ],
-                "imageUrl": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                "imageUrl": placeholders["manali"],
             },
             {
                 "projectId": 103,
-                "type": "City",
+                "type": "jaipur",
                 "name": "Jaipur",
                 "shortDescription": "Heritage, food, and structured city touring.",
                 "description": "Jaipur offers palaces, forts, bazaars, and a compact city travel experience.",
@@ -69,21 +78,21 @@ def seed_data() -> None:
                 "hero": {
                     "title": "Discover Jaipur",
                     "description": "A city destination rooted in heritage and culture.",
-                    "image": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                    "image": placeholders["jaipur"],
                 },
                 "whyChooseTitle": "Why Choose Jaipur?",
                 "whyChooseDescription": "A good fit for culture-first travel with easy sightseeing loops.",
                 "images": [
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Jaipur palace"},
+                    {"url": placeholders["jaipur"], "alt": "Jaipur palace"},
                 ],
                 "faqs": [
                     {"question": "Is it good for short trips?", "answer": "Yes, the city is easy to cover in a few days."},
                 ],
-                "imageUrl": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                "imageUrl": placeholders["jaipur"],
             },
             {
                 "projectId": 104,
-                "type": "Adventure",
+                "type": "rishikesh",
                 "name": "Rishikesh",
                 "shortDescription": "River adventures, rafting, and wellness stays.",
                 "description": "Rishikesh is a compact destination for adventure and spiritual travel.",
@@ -93,21 +102,21 @@ def seed_data() -> None:
                 "hero": {
                     "title": "Go to Rishikesh",
                     "description": "Adventure by the river with a calm travel pace.",
-                    "image": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                    "image": placeholders["rishikesh"],
                 },
                 "whyChooseTitle": "Why Choose Rishikesh?",
                 "whyChooseDescription": "It works well for short adventure trips and wellness-focused travel.",
                 "images": [
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Rishikesh river"},
+                    {"url": placeholders["rishikesh"], "alt": "Rishikesh river"},
                 ],
                 "faqs": [
                     {"question": "Is rafting included?", "answer": "The location detail can describe available activities and packages."},
                 ],
-                "imageUrl": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                "imageUrl": placeholders["rishikesh"],
             },
             {
                 "projectId": 105,
-                "type": "Beach",
+                "type": "andaman",
                 "name": "Andaman",
                 "shortDescription": "Clear water, islands, and slower travel days.",
                 "description": "Andaman is suited to travelers who want island scenery and calm beach time.",
@@ -117,21 +126,21 @@ def seed_data() -> None:
                 "hero": {
                     "title": "Explore Andaman",
                     "description": "A quieter beach destination with island character.",
-                    "image": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                    "image": placeholders["andaman"],
                 },
                 "whyChooseTitle": "Why Choose Andaman?",
                 "whyChooseDescription": "A clean choice for scenic and relaxed coastal itineraries.",
                 "images": [
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Andaman islands"},
+                    {"url": placeholders["andaman"], "alt": "Andaman islands"},
                 ],
                 "faqs": [
                     {"question": "How do I get there?", "answer": "The location detail page can explain travel access and booking flow."},
                 ],
-                "imageUrl": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                "imageUrl": placeholders["andaman"],
             },
             {
                 "projectId": 106,
-                "type": "Mountains",
+                "type": "kashmir",
                 "name": "Kashmir",
                 "shortDescription": "Lakes, valleys, and scenic seasonal travel.",
                 "description": "Kashmir is a high-interest mountain destination with strong visual appeal.",
@@ -141,17 +150,17 @@ def seed_data() -> None:
                 "hero": {
                     "title": "Travel to Kashmir",
                     "description": "Scenic landscapes and seasonal mountain travel.",
-                    "image": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                    "image": placeholders["kashmir"],
                 },
                 "whyChooseTitle": "Why Choose Kashmir?",
                 "whyChooseDescription": "Great for travelers seeking landscape-driven trips.",
                 "images": [
-                    {"url": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg", "alt": "Kashmir valley"},
+                    {"url": placeholders["kashmir"], "alt": "Kashmir valley"},
                 ],
                 "faqs": [
                     {"question": "What makes it special?", "answer": "Scenery, seasonal variety, and a strong destination identity."},
                 ],
-                "imageUrl": "https://res.cloudinary.com/demo/image/upload/w_1200,c_fill,f_auto,q_auto/sample.jpg",
+                "imageUrl": placeholders["kashmir"],
             },
         ]
     )

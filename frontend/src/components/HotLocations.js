@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-import { HotLocationCard } from "@/components/HotLocationCard";
+import { HotLocationCard } from "./HotLocationCard";
 
 export function HotLocations({ locations, loading, error, hasMore, onLoadMore }) {
   const rowRef = useRef(null);
@@ -27,8 +27,9 @@ export function HotLocations({ locations, loading, error, hasMore, onLoadMore })
     <section className="section container">
       <div className="sectionHeading">
         <div>
-          <h2>Hot Locations</h2>
-          <p>Horizontal, minimal cards that keep loading as you scroll.</p>
+          <div className="eyebrow">Curated for you</div>
+          <h2>Top Rated</h2>
+          <p>High-rated escapes to help you choose with confidence.</p>
         </div>
       </div>
 

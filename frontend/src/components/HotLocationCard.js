@@ -8,7 +8,7 @@ export function HotLocationCard({ location }) {
         <h3 className="hotTitle">{location.name}</h3>
         <p className="ellipsis">{location.shortDescription}</p>
         <div className="rating">
-          <span>Rating {location.rating}</span>
+          <span aria-label={`${location.rating} out of 5 rating`}>★ {location.rating}</span>
           <span className="muted">({location.reviewCount} reviews)</span>
         </div>
         <Link className="cardLink" href={`/locations/${location.projectId}`}>

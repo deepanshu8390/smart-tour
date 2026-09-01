@@ -1,4 +1,4 @@
-import { LocationDetailPage } from "@/components/LocationDetailPage";
+import { LocationDetailPage } from "../../../components/LocationDetailPage";
 
 export default function Page({ params }) {
   return <LocationDetailPage projectId={Number(params.projectId)} />;

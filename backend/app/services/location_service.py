@@ -3,10 +3,26 @@ from __future__ import annotations
 from math import ceil
 
 from app.core.exceptions import AppError
+from app.repositories.base_location_repository import BaseLocationRepository
 from app.repositories.location_repository import location_repository
 
 
 class LocationService:
+    def __init__(self, repository: BaseLocationRepository) -> None:
+        self.repository = repository
+
+    def _build_summary(self, item: dict) -> dict:
+        return {
+            "projectId": item["projectId"],
+            "type": item["type"],
+            "name": item["name"],
+            "shortDescription": item["shortDescription"],
+            "imageUrl": item["imageUrl"],
+            "rating": item["rating"],
+            "reviewCount": item["reviewCount"],
+            "location": item["location"],
+        }
+
     def list_locations(
         self,
         page: int = 1,
@@ -20,7 +36,7 @@ class LocationService:
         if limit < 1 or limit > 50:
             raise AppError("limit must be between 1 and 50", 422)
 
-        items = location_repository.list_all()
+        items = self.repository.list_all()
 
         if search:
             query = search.lower()
@@ -55,40 +71,28 @@ class LocationService:
             "page": page,
             "limit": limit,
             "totalPages": total_pages,
-            "data": [
-                {
-                    "projectId": item["projectId"],
-                    "type": item["type"],
-                    "name": item["name"],
-                    "shortDescription": item["shortDescription"],
-                    "imageUrl": item["imageUrl"],
-                    "rating": item["rating"],
-                    "reviewCount": item["reviewCount"],
-                    "location": item["location"],
-                }
-                for item in paged
-            ],
+            "data": [self._build_summary(item) for item in paged],
         }
 
     def get_location(self, project_id: int) -> dict:
-        location = location_repository.get_by_project_id(project_id)
+        location = self.repository.get_by_project_id(project_id)
         if not location:
             raise AppError("Location not found", 404)
         return location
 
     def create_location(self, payload: dict) -> dict:
-        return location_repository.upsert(int(payload["projectId"]), payload)
+        return self.repository.upsert(int(payload["projectId"]), payload)
 
     def update_location(self, project_id: int, payload: dict) -> dict:
-        existing = location_repository.get_by_project_id(project_id)
+        existing = self.repository.get_by_project_id(project_id)
         if not existing:
             raise AppError("Location not found", 404)
         updated = {**existing, **{key: value for key, value in payload.items() if value is not None}}
-        return location_repository.upsert(project_id, updated)
+        return self.repository.upsert(project_id, updated)
 
     def delete_location(self, project_id: int) -> None:
-        if not location_repository.delete(project_id):
+        if not self.repository.delete(project_id):
             raise AppError("Location not found", 404)
 
 
-location_service = LocationService()
+location_service = LocationService(location_repository)

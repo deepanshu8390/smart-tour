@@ -2,7 +2,7 @@ const filters = ["All", "Beach", "Mountains", "Adventure", "City"];
 
 export function FilterPills({ activeFilter, onChange }) {
   return (
-    <div className="pills" aria-label="Location type filters">
+    <div className="pills" role="group" aria-label="Location type filters">
       {filters.map((filter) => (
         <button
           key={filter}

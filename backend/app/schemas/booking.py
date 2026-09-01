@@ -1,6 +1,8 @@
 from datetime import date
 from pydantic import BaseModel, Field
 
+from app.state.booking_state import BookingStatus
+
 
 class BookingCreateRequest(BaseModel):
     projectId: int = Field(ge=1)
@@ -15,7 +17,7 @@ class BookingResponse(BaseModel):
     locationName: str
     bookingDate: date
     numberOfPeople: int
-    status: str
+    status: BookingStatus
 
 
 class BookingListResponse(BaseModel):

@@ -1,12 +1,13 @@
 from app.auth.mock_otp_service import MockOTPService
+from app.auth.otp_service import OTPService
 from app.core.exceptions import AppError
 from app.core.security import create_access_token
 from app.repositories.user_repository import user_repository
 
 
 class AuthService:
-    def __init__(self) -> None:
-        self.otp_service = MockOTPService()
+    def __init__(self, otp_service: OTPService | None = None) -> None:
+        self.otp_service = otp_service or MockOTPService()
 
     def send_otp(self, name: str, country_code: str, mobile: str) -> dict:
         otp = self.otp_service.send_otp(country_code, mobile)

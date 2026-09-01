@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Andaman placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f4c81" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)" />
+  <ellipse cx="280" cy="260" rx="220" ry="120" fill="#cffafe" opacity="0.2" />
+  <ellipse cx="920" cy="520" rx="260" ry="120" fill="#a5f3fc" opacity="0.16" />
+  <path d="M0 650 C150 600 250 700 400 660 C550 620 650 520 790 550 C930 580 1040 650 1200 620" fill="none" stroke="#ecfeff" stroke-width="22" stroke-linecap="round" opacity="0.8" />
+  <text x="80" y="160" fill="#ecfeff" font-family="Arial, Helvetica, sans-serif" font-size="74" font-weight="700">Andaman</text>
+  <text x="80" y="235" fill="#cffafe" font-family="Arial, Helvetica, sans-serif" font-size="30">Island getaway placeholder</text>
+</svg>

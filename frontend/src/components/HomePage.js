@@ -24,12 +24,9 @@ export function HomePage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [allLocations, setAllLocations] = useState([]);
 
   const [hotLocations, setHotLocations] = useState([]);
-  const [hotPage, setHotPage] = useState(1);
-  const [hotLoading, setHotLoading] = useState(true);
-  const [hotError, setHotError] = useState(null);
-  const [hotHasMore, setHotHasMore] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -37,14 +34,16 @@ export function HomePage() {
     setError(null);
 
     fetchLocations({
-      page,
-      limit: 6,
+      page: 1,
+      limit: 50,
       search: search || undefined,
       type: activeFilter === "All" ? undefined : activeFilter,
     })
       .then((response) => {
         if (!mounted) return;
-        setLocationState(response);
+        const sortedByRating = [...response.data].sort((a, b) => b.rating - a.rating);
+        setAllLocations(response.data);
+        setHotLocations(sortedByRating.slice(0, 3));
       })
       .catch((err) => {
         if (!mounted) return;
@@ -57,35 +56,21 @@ export function HomePage() {
     return () => {
       mounted = false;
     };
-  }, [page, search, activeFilter]);
+  }, [search, activeFilter]);
 
   useEffect(() => {
-    let mounted = true;
-    setHotLoading(true);
-    setHotError(null);
-
-    fetchLocations({
-      page: hotPage,
-      limit: 3,
-      sort: "rating_desc",
-    })
-      .then((response) => {
-        if (!mounted) return;
-        setHotLocations((current) => (hotPage === 1 ? response.data : [...current, ...response.data]));
-        setHotHasMore(hotPage < response.totalPages);
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        setHotError(err.message);
-      })
-      .finally(() => {
-        if (mounted) setHotLoading(false);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [hotPage]);
+    const pageSize = 6;
+    const totalPages = Math.max(1, Math.ceil(allLocations.length / pageSize));
+    const safePage = Math.min(page, totalPages);
+    const start = (safePage - 1) * pageSize;
+    setLocationState({
+      total: allLocations.length,
+      page: safePage,
+      limit: pageSize,
+      totalPages,
+      data: allLocations.slice(start, start + pageSize),
+    });
+  }, [allLocations, page]);
 
   function handleSearchSubmit() {
     setPage(1);
@@ -103,11 +88,6 @@ export function HomePage() {
 
   function handleNextPage() {
     setPage((current) => Math.min(locationState.totalPages, current + 1));
-  }
-
-  function loadMoreHotLocations() {
-    if (hotLoading || !hotHasMore) return;
-    setHotPage((current) => current + 1);
   }
 
   return (
@@ -132,10 +112,10 @@ export function HomePage() {
       />
       <HotLocations
         locations={hotLocations}
-        loading={hotLoading}
-        error={hotError}
-        hasMore={hotHasMore}
-        onLoadMore={loadMoreHotLocations}
+        loading={loading}
+        error={error}
+        hasMore={false}
+        onLoadMore={() => {}}
       />
       <Footer />
     </div>

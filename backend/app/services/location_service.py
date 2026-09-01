@@ -78,7 +78,13 @@ class LocationService:
         location = self.repository.get_by_project_id(project_id)
         if not location:
             raise AppError("Location not found", 404)
-        return location
+
+        similar = [
+            item for item in self.repository.list_all()
+            if item["projectId"] != project_id and item["type"].lower() == location["type"].lower()
+        ]
+        similar.sort(key=lambda item: item["rating"], reverse=True)
+        return {**location, "similarLocations": [self._build_summary(item) for item in similar[:3]]}
 
     def create_location(self, payload: dict) -> dict:
         return self.repository.upsert(int(payload["projectId"]), payload)

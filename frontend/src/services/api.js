@@ -103,7 +103,23 @@ export async function fetchLocation(projectId) {
     if (!fallback) {
       throw new Error("Location not found");
     }
-    return fallback;
+    return {
+      ...fallback,
+      similarLocations: mockLocations
+        .filter((item) => item.projectId !== projectId && item.type === fallback.type)
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 3)
+        .map(({ projectId: id, type, name, shortDescription, imageUrl, rating, reviewCount, location }) => ({
+          projectId: id,
+          type,
+          name,
+          shortDescription,
+          imageUrl,
+          rating,
+          reviewCount,
+          location,
+        })),
+    };
   }
 }
 

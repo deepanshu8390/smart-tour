@@ -46,7 +46,7 @@ class LocationSummary(BaseModel):
 
 
 class LocationDetail(LocationBase):
-    pass
+    similarLocations: list[LocationSummary] = Field(default_factory=list)
 
 
 class LocationListResponse(BaseModel):

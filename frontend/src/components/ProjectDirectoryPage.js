@@ -18,20 +18,25 @@ export function ProjectDirectoryPage() {
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
-    setError(null);
-    fetchLocations({
+    const controller = new AbortController();
+    const debounce = setTimeout(() => {
+      setLoading(true);
+      setError(null);
+      fetchLocations({
       page: 1,
-      limit: 50,
+      limit: search || activeFilter !== "All" ? 4 : 50,
       search: search || undefined,
       type: activeFilter === "All" ? undefined : activeFilter,
-    })
-      .then((response) => mounted && setLocations(response.data))
-      .catch((err) => mounted && setError(err.message))
-      .finally(() => mounted && setLoading(false));
+      }, controller.signal)
+        .then((response) => mounted && !controller.signal.aborted && setLocations(response.data))
+        .catch((err) => mounted && err.name !== "AbortError" && setError(err.message))
+        .finally(() => mounted && !controller.signal.aborted && setLoading(false));
+    }, 250);
 
     return () => {
       mounted = false;
+      clearTimeout(debounce);
+      controller.abort();
     };
   }, [search, activeFilter]);
 

@@ -8,6 +8,9 @@ class BaseBookingRepository(ABC):
     def create(self, booking: dict) -> dict:
         raise NotImplementedError
 
+    def create_idempotent(self, booking: dict, idempotency_key: str, request_hash: str) -> dict:
+        raise NotImplementedError
+
     @abstractmethod
     def update(self, booking_id: str, updates: dict) -> dict | None:
         raise NotImplementedError

@@ -48,7 +48,7 @@ export function LoginPage() {
     }
 
     try {
-      const auth = await verifyOtp({ name, countryCode, mobile, otp, role: "USER" });
+      const auth = await verifyOtp({ name, countryCode, mobile, otp });
       setAuthState(auth);
       setMessage("Logged in successfully.");
     } catch (err) {

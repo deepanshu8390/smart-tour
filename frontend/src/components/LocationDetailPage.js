@@ -17,17 +17,24 @@ export function LocationDetailPage({ projectId }) {
   const [numberOfPeople, setNumberOfPeople] = useState(2);
   const [bookingMessage, setBookingMessage] = useState(null);
   const [bookingError, setBookingError] = useState(null);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [idempotencyKey, setIdempotencyKey] = useState(null);
   const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     let mounted = true;
+    const controller = new AbortController();
     setLoading(true);
-    fetchLocation(projectId)
+    setError(null);
+    setLocation(null);
+    fetchLocation(projectId, controller.signal)
       .then((data) => mounted && setLocation(data))
       .catch((err) => mounted && setError(err.message))
-      .finally(() => mounted && setLoading(false));
+      .finally(() => mounted && !controller.signal.aborted && setLoading(false));
     return () => {
       mounted = false;
+      controller.abort();
     };
   }, [projectId]);
 
@@ -46,11 +53,23 @@ export function LocationDetailPage({ projectId }) {
       return;
     }
 
+    const key = crypto.randomUUID();
+    setIdempotencyKey(key);
+    setShowConfirmation(true);
+  }
+
+  async function confirmBooking() {
+    const auth = getAuthState();
+    if (!auth?.token || !idempotencyKey) return;
+    setShowConfirmation(false);
+    setBookingLoading(true);
     try {
-      await createBooking(auth.token, { projectId, bookingDate, numberOfPeople });
+      await createBooking(auth.token, { projectId, bookingDate, numberOfPeople }, idempotencyKey);
       setBookingMessage("Booking created successfully.");
     } catch (err) {
       setBookingError(err instanceof Error ? err.message : "Booking failed");
+    } finally {
+      setBookingLoading(false);
     }
   }
 
@@ -126,7 +145,7 @@ export function LocationDetailPage({ projectId }) {
                       <span>Travelers</span>
                       <input id="travelers" name="numberOfPeople" value={numberOfPeople} onChange={(event) => setNumberOfPeople(Number(event.target.value))} type="number" min={1} max={20} required />
                     </label>
-                    <button className="primaryButton" type="submit">Book now</button>
+                    <button className="primaryButton" type="submit" disabled={bookingLoading}> {bookingLoading ? "Confirming..." : "Book now"}</button>
                   </form>
                   {bookingMessage ? <div className="notice" role="status">{bookingMessage}</div> : null}
                   {bookingError ? <div className="error" role="alert">{bookingError}</div> : null}
@@ -134,6 +153,19 @@ export function LocationDetailPage({ projectId }) {
                 </article>
               </aside>
             </section>
+            {showConfirmation ? (
+              <div className="modalBackdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowConfirmation(false)}>
+                <section className="contactModal" role="dialog" aria-modal="true" aria-labelledby="booking-confirmation-title">
+                  <h2 id="booking-confirmation-title">Confirm your booking</h2>
+                  <p className="muted">{numberOfPeople} traveler{numberOfPeople === 1 ? "" : "s"} × ₹10,000</p>
+                  <p>Total simulated payment: <strong>₹{(numberOfPeople * 10000).toLocaleString("en-IN")}</strong></p>
+                  <div className="heroActions">
+                    <button className="secondaryButton" type="button" onClick={() => setShowConfirmation(false)}>Cancel</button>
+                    <button className="primaryButton" type="button" onClick={confirmBooking} disabled={bookingLoading}>Yes, confirm booking</button>
+                  </div>
+                </section>
+              </div>
+            ) : null}
             {location.similarLocations?.length ? (
               <section className="section relatedSection">
                 <div className="sectionHeading">

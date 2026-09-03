@@ -33,12 +33,16 @@ class UserRepository:
         document = self.collection.find_one({"countryCode": country_code, "mobile": mobile})
         return self._to_record(document) if document else None
 
+    def get_by_id(self, user_id: str) -> UserRecord | None:
+        document = self.collection.find_one({"id": user_id})
+        return self._to_record(document) if document else None
+
     def upsert(self, name: str, country_code: str, mobile: str, role: str = "USER") -> UserRecord:
         user_id = str(uuid4())
         self.collection.update_one(
             {"countryCode": country_code, "mobile": mobile},
             {
-                "$set": {"name": name, "role": role or "USER"},
+                "$set": {"name": name, "role": "USER"},
                 "$setOnInsert": {
                     "id": user_id,
                     "countryCode": country_code,

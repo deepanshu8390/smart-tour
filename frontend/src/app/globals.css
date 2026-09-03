@@ -145,6 +145,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
 .modalHeader h2 { margin: 5px 0 0; font-size: 1.55rem; letter-spacing: -0.03em; }
 .modalClose { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
 .modalClose:hover { background: var(--surface-muted); }
+.adminDashboard { padding: 22px; }
+.adminTaskTable { overflow: hidden; border: 1px solid var(--border); border-radius: 11px; }
+.adminTaskRow { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(110px, .7fr) minmax(170px, 1fr); gap: 16px; align-items: center; padding: 13px 15px; border-top: 1px solid var(--border); }
+.adminTaskRow:first-child { border-top: 0; }
+.adminTaskHeader { background: var(--surface-muted); }
+.adminTaskRow button { justify-self: start; border: 1px solid var(--border); border-radius: 9px; padding: 8px 10px; background: var(--surface-muted); color: var(--muted); cursor: not-allowed; }
 
 .footer { margin-top: auto; padding: 40px 0; color: var(--muted); }
 .footerGrid { display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--border); padding-top: 20px; flex-wrap: wrap; }
@@ -187,4 +193,116 @@ button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visibl
   .galleryGrid { grid-template-columns: 1fr 1fr; }
   .galleryGrid img, .galleryGrid img:first-child { height: 150px; min-height: 0; }
   .mobileBookingCta { position: sticky; bottom: 12px; z-index: 10; display: block; margin-top: 4px; padding: 13px 16px; border: 1px solid var(--accent); border-radius: 11px; background: var(--accent); color: #fff; text-align: center; font-weight: 800; box-shadow: var(--shadow-md); }
+  .adminTaskRow { grid-template-columns: 1fr; gap: 6px; }
+}
+
+/* Visual refinement */
+:root {
+  --bg: #f4f1ea;
+  --surface: #fffdf8;
+  --surface-strong: #ffffff;
+  --surface-muted: #e9eee9;
+  --text: #172525;
+  --muted: #697673;
+  --border: #d8ded8;
+  --accent: #e46d4d;
+  --accent-dark: #bd4f34;
+  --accent-soft: #f9e5dc;
+  --teal: #176f6b;
+  --teal-soft: #dceceb;
+  --shadow-sm: 0 8px 22px rgba(23, 37, 37, 0.06);
+  --shadow-md: 0 20px 50px rgba(23, 37, 37, 0.11);
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+}
+
+body { background: var(--bg); }
+.topbar { background: rgba(244, 241, 234, 0.9); }
+.nav { min-height: 78px; }
+.brand { font-size: 1.05rem; }
+.brandMark { width: 40px; height: 40px; border-radius: 13px; box-shadow: 0 5px 14px rgba(23, 111, 107, 0.22); }
+.navLinks { gap: 4px; }
+.navLinks a, .navLinks button { font-size: 0.9rem; font-weight: 650; }
+.navLinks .muted { padding: 0 8px; font-size: 0.85rem; }
+
+.hero { position: relative; padding: 88px 0 70px; }
+.hero::before { content: ""; position: absolute; z-index: -1; top: 0; right: -10vw; width: 42vw; height: 30rem; border-radius: 50%; background: var(--accent-soft); opacity: 0.7; filter: blur(2px); }
+.heroGrid { align-items: center; gap: 64px; }
+.heroTitle { max-width: 680px; color: var(--text); font-size: clamp(3.2rem, 7vw, 6.2rem); line-height: 0.94; }
+.heroCopy { font-size: 1.08rem; }
+.heroActions { margin-top: 30px; }
+.heroStats { gap: 34px; padding-top: 24px; border-top: 1px solid var(--border); }
+.heroStat strong { font-size: 1.4rem; }
+.heroVisual { min-height: 410px; padding: 12px; border-radius: 24px; transform: rotate(0.8deg); }
+.heroVisual img { min-height: 380px; border-radius: 18px; }
+.heroBadge { right: -24px; bottom: 30px; max-width: 205px; padding: 16px 18px; border: 1px solid var(--border); }
+.searchBar { margin-top: -22px; position: relative; z-index: 2; border-radius: 14px; }
+.searchBar input, .directorySearch input { font-size: 0.98rem; }
+
+.section { padding: 54px 0; }
+.sectionHeading { margin-bottom: 24px; }
+.sectionHeading h1, .sectionHeading h2 { color: var(--text); }
+.sectionHeading h2 { font-size: clamp(1.7rem, 3vw, 2.35rem); }
+.toolbar { margin-bottom: 26px; padding: 14px 0; }
+.pill { padding: 10px 16px; background: rgba(255, 255, 255, 0.42); font-size: 0.88rem; font-weight: 700; }
+.pillActive { box-shadow: 0 5px 14px rgba(23, 111, 107, 0.18); }
+.grid { gap: 22px; }
+.featuredGrid { gap: 22px; }
+.locationCard, .hotCard { border-color: rgba(216, 222, 216, 0.9); box-shadow: 0 8px 18px rgba(23, 37, 37, 0.045); }
+.locationCard:hover, .hotCard:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+.locationCardImage, .hotImage { background: var(--surface-muted); }
+.locationCardBody { padding: 20px; }
+.locationCardMeta { font-size: 0.76rem; font-weight: 700; letter-spacing: 0.02em; }
+.locationCardTitle { margin-top: 12px; font-family: Georgia, "Times New Roman", serif; font-size: 1.55rem; font-weight: 500; }
+.locationCardText { min-height: 52px; line-height: 1.6; }
+.cardLink { margin-top: 18px; }
+.cardLink span { transition: transform 160ms ease; }
+.cardLink:hover span { transform: translateX(4px); }
+.pager { padding: 6px; border: 1px solid var(--border); border-radius: 13px; background: rgba(255, 255, 255, 0.48); }
+.pager button { border: 0; background: transparent; font-weight: 700; }
+.pager button:hover:not(:disabled) { background: var(--surface-strong); }
+
+.directoryIntro { position: relative; padding: 92px 0 44px; }
+.directoryIntro::after { content: ""; position: absolute; z-index: -1; left: -12vw; bottom: 0; width: 25rem; height: 12rem; border-radius: 50%; background: var(--teal-soft); opacity: 0.65; }
+.directoryIntro h1 { max-width: 850px; font-size: clamp(3rem, 6vw, 5.8rem); }
+.directorySearch { max-width: 760px; margin-top: 34px; padding: 7px; }
+.directoryFilters { border-top: 0; }
+.resultCount { font-weight: 650; }
+
+.detailLayout { gap: 30px; }
+.heroPanel { border-color: rgba(216, 222, 216, 0.9); }
+.detailHeroCopy { padding: 42px; }
+.detailHeroCopy .heroTitle { font-size: clamp(2.6rem, 5vw, 4.8rem); }
+.detailHeroImage { min-height: 410px; }
+.facts { gap: 28px; }
+.bookingBox { top: 104px; border-top-width: 5px; }
+.bookingBox .primaryButton { width: 100%; }
+.field { color: var(--text); }
+.field input, .field textarea { transition: border-color 160ms ease, box-shadow 160ms ease; }
+.field input:focus, .field textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(23, 111, 107, 0.12); outline: 0; }
+
+.contentCard, .adminDashboard { border-color: rgba(216, 222, 216, 0.9); }
+.adminDashboard { background: var(--surface); }
+.adminTaskTable { box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4); }
+.adminTaskHeader { color: var(--teal); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.adminTaskRow button { font-size: 0.78rem; font-weight: 750; }
+.modalBackdrop { backdrop-filter: blur(5px); }
+.contactModal { border-radius: 20px; }
+.primaryButton, .secondaryButton { font-size: 0.92rem; }
+
+@media (max-width: 640px) {
+  .hero { padding: 54px 0 38px; }
+  .hero::before { right: -35vw; width: 90vw; height: 20rem; }
+  .heroGrid { gap: 36px; }
+  .heroVisual { min-height: 285px; }
+  .heroVisual img { min-height: 255px; }
+  .heroBadge { right: 8px; bottom: 18px; }
+  .searchBar { margin-top: -8px; }
+  .section { padding: 38px 0; }
+  .directoryIntro { padding: 58px 0 28px; }
+  .directoryIntro h1 { font-size: clamp(2.75rem, 14vw, 4.6rem); }
+  .detailHeroCopy { padding: 26px 22px; }
+  .detailHeroImage { min-height: 260px; }
+  .pager { width: 100%; justify-content: space-between; }
 }

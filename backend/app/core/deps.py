@@ -29,3 +29,7 @@ def require_admin(current_user: CurrentUser = Depends(get_current_user)) -> Curr
     if current_user.role != "ADMIN":
         raise AppError("Forbidden", 403)
     return current_user
+
+
+def reject_admin_access() -> None:
+    raise AppError("Admin access cannot be provided", 403)

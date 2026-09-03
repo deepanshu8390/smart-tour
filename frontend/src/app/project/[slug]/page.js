@@ -1,4 +1,5 @@
 import { LocationDetailPage } from "../../../components/LocationDetailPage";
+import { notFound, redirect } from "next/navigation";
 
 const projectIds = {
   goa: 101,
@@ -11,5 +12,6 @@ const projectIds = {
 
 export default function Page({ params }) {
   const projectId = projectIds[params.slug.toLowerCase()];
-  return <LocationDetailPage projectId={projectId || 0} />;
+  if (!projectId) notFound();
+  redirect(`/locations/${projectId}`);
 }

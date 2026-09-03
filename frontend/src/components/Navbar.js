@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { logoutSession } from "../services/api";
 import { clearAuthState, getAuthState } from "../services/auth-storage";
 
 export function Navbar() {
@@ -13,6 +14,7 @@ export function Navbar() {
   }, []);
 
   function handleLogout() {
+    void logoutSession();
     clearAuthState();
     setAuth(null);
   }

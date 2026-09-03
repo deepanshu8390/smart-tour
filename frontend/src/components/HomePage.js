@@ -8,6 +8,7 @@ import { Hero } from "./Hero";
 import { HotLocations } from "./HotLocations";
 import { LocationGrid } from "./LocationGrid";
 import { Navbar } from "./Navbar";
+import { AdminTaskDashboard } from "./AdminTaskDashboard";
 import { fetchLocations } from "../services/api";
 
 export function HomePage() {
@@ -24,53 +25,42 @@ export function HomePage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [allLocations, setAllLocations] = useState([]);
-
   const [hotLocations, setHotLocations] = useState([]);
 
   useEffect(() => {
     let mounted = true;
-    setLoading(true);
-    setError(null);
-
-    fetchLocations({
-      page: 1,
-      limit: 50,
+    const controller = new AbortController();
+    const debounce = setTimeout(() => {
+      setLoading(true);
+      setError(null);
+      const filtered = Boolean(search || activeFilter !== "All");
+      fetchLocations({
+      page,
+      limit: filtered ? 4 : 6,
       search: search || undefined,
       type: activeFilter === "All" ? undefined : activeFilter,
-    })
+      }, controller.signal)
       .then((response) => {
-        if (!mounted) return;
+        if (!mounted || controller.signal.aborted) return;
         const sortedByRating = [...response.data].sort((a, b) => b.rating - a.rating);
-        setAllLocations(response.data);
+        setLocationState(response);
         setHotLocations(sortedByRating.slice(0, 3));
       })
       .catch((err) => {
-        if (!mounted) return;
+        if (!mounted || err.name === "AbortError") return;
         setError(err.message);
       })
       .finally(() => {
-        if (mounted) setLoading(false);
+        if (mounted && !controller.signal.aborted) setLoading(false);
       });
+    }, 250);
 
     return () => {
       mounted = false;
+      clearTimeout(debounce);
+      controller.abort();
     };
-  }, [search, activeFilter]);
-
-  useEffect(() => {
-    const pageSize = 6;
-    const totalPages = Math.max(1, Math.ceil(allLocations.length / pageSize));
-    const safePage = Math.min(page, totalPages);
-    const start = (safePage - 1) * pageSize;
-    setLocationState({
-      total: allLocations.length,
-      page: safePage,
-      limit: pageSize,
-      totalPages,
-      data: allLocations.slice(start, start + pageSize),
-    });
-  }, [allLocations, page]);
+  }, [search, activeFilter, page]);
 
   function handleSearchSubmit() {
     setPage(1);
@@ -117,6 +107,7 @@ export function HomePage() {
         hasMore={false}
         onLoadMore={() => {}}
       />
+      <AdminTaskDashboard />
       <Footer />
     </div>
   );

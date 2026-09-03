@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from datetime import datetime, timezone
 from uuid import uuid4
+from pymongo.errors import DuplicateKeyError
 
 from app.db.mongo import mongo_database
 from app.repositories.base_booking_repository import BaseBookingRepository
@@ -14,6 +15,7 @@ class BookingRepository(BaseBookingRepository):
         self.collection.create_index([("userId", 1), ("createdAt", -1)])
         self.collection.create_index([("projectId", 1), ("bookingDate", 1)])
         self.collection.create_index("status")
+        self.collection.create_index([("userId", 1), ("idempotencyKey", 1)], unique=True, sparse=True)
 
     def create(self, booking: dict) -> dict:
         record = {
@@ -23,6 +25,30 @@ class BookingRepository(BaseBookingRepository):
             "createdAt": datetime.now(timezone.utc),
         }
         self.collection.insert_one(record)
+        return record
+
+    def create_idempotent(self, booking: dict, idempotency_key: str, request_hash: str) -> dict:
+        record = {
+            **deepcopy(booking),
+            "bookingDate": booking["bookingDate"].isoformat(),
+            "id": str(uuid4()),
+            "idempotencyKey": idempotency_key,
+            "requestHash": request_hash,
+            "createdAt": datetime.now(timezone.utc),
+        }
+        try:
+            self.collection.insert_one(record)
+        except DuplicateKeyError:
+            existing = self.collection.find_one(
+                {"userId": booking["userId"], "idempotencyKey": idempotency_key},
+                {"_id": 0},
+            )
+            if existing and existing.get("requestHash") != request_hash:
+                from app.core.exceptions import AppError
+                raise AppError("Idempotency key reused with different booking details", 409)
+            if existing:
+                return existing
+            raise
         return record
 
     def update(self, booking_id: str, updates: dict) -> dict | None:

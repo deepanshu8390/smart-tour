@@ -1,3 +1,7 @@
+from datetime import date
+import hashlib
+import json
+
 from app.core.exceptions import AppError
 from app.repositories.base_booking_repository import BaseBookingRepository
 from app.repositories.base_location_repository import BaseLocationRepository
@@ -11,14 +15,23 @@ class BookingService:
         self.bookings = bookings
         self.locations = locations
 
-    def create_booking(self, user_id: str, project_id: int, booking_date, number_of_people: int) -> dict:
+    def create_booking(self, user_id: str, project_id: int, booking_date, number_of_people: int, idempotency_key: str) -> dict:
+        if not 1 <= len(idempotency_key) <= 128:
+            raise AppError("Idempotency-Key must be between 1 and 128 characters", 422)
+        if booking_date < date.today():
+            raise AppError("bookingDate must be today or later", 422)
         location = self.locations.get_by_project_id(project_id)
         if not location:
             raise AppError("Location not found", 404)
 
         initial_state = BookingState(BookingStatus.PENDING)
         confirmed_state = initial_state.transition_to(BookingStatus.CONFIRMED)
-        booking = self.bookings.create(
+        request_hash = hashlib.sha256(json.dumps({
+            "projectId": project_id,
+            "bookingDate": booking_date.isoformat(),
+            "numberOfPeople": number_of_people,
+        }, sort_keys=True).encode()).hexdigest()
+        booking = self.bookings.create_idempotent(
             {
                 "userId": user_id,
                 "projectId": project_id,
@@ -26,7 +39,7 @@ class BookingService:
                 "bookingDate": booking_date,
                 "numberOfPeople": number_of_people,
                 "status": confirmed_state.status,
-            }
+            }, idempotency_key, request_hash
         )
         return booking
 

@@ -150,6 +150,7 @@ sequenceDiagram
     participant AuthService
     participant OTP as OTPService
     participant Users as UserRepository
+    participant Sessions as RefreshSessionRepository
     participant JWT as Security utilities
 
     Client->>AuthAPI: POST /send-otp
@@ -159,8 +160,10 @@ sequenceDiagram
     AuthAPI->>OTP: verify_otp(...)
     OTP-->>AuthService: valid / invalid
     AuthService->>Users: upsert user
-    AuthService->>JWT: create_access_token(user claims)
-    JWT-->>Client: token, userId, name, role
+    AuthService->>JWT: create_access_token(user claims, exp=7 days)
+    AuthService->>Sessions: save SHA-256(refresh token)
+    JWT-->>Client: access token, userId, name, role
+    Sessions-->>Client: HttpOnly refresh cookie
 ```
 
 Protected requests must include:
@@ -177,7 +180,7 @@ Authorization: Bearer <jwt>
 - `countryCode`
 - `mobile`
 
-`require_admin()` calls `get_current_user()` and rejects users whose role is not `ADMIN`.
+Admin endpoints currently reject every request with `403 Admin access cannot be provided`. The client cannot grant itself an admin role; any submitted role is ignored and the server always creates a `USER` session.
 
 Important development limitation: `OTPService.verify_otp()` currently returns true for any non-empty OTP. This is suitable only for a demo and must be replaced by an expiring, provider-backed OTP verification flow.
 
@@ -231,6 +234,15 @@ Content-Type: application/json
 }
 ```
 
+The `role` field is accepted for backward compatibility but is ignored by the server.
+
+Additional session endpoints:
+
+```http
+POST /auth/refresh    # reads the HttpOnly refresh cookie and rotates the session
+POST /auth/logout     # revokes the refresh session and clears the cookie
+```
+
 ### Locations
 
 ```http
@@ -248,7 +260,7 @@ DELETE /locations/{projectId}   # ADMIN only
 ```http
 POST /bookings
 GET /bookings/my
-GET /admin/bookings              # ADMIN only
+GET /admin/bookings              # always returns 403 while admin access is disabled
 ```
 
 Create request:
@@ -262,6 +274,7 @@ Create request:
 ```
 
 The server derives `userId` from the JWT. The client must not be trusted to submit ownership fields.
+`POST /bookings` also requires an `Idempotency-Key` header. Reusing the same key for the same user returns the original booking; reusing it with different booking details returns `409`.
 
 ## 8. Current Pydantic Schemas
 
@@ -374,6 +387,7 @@ The repositories use these collections:
 - `smart_tour.locations`
 - `smart_tour.users`
 - `smart_tour.bookings`
+- `smart_tour.refresh_sessions`
 
 `seed_data()` runs at startup and uses upsert behavior for locations. It does not delete existing records. Users and bookings are written through their repositories and survive backend restarts.
 
@@ -462,9 +476,36 @@ Recommended indexes:
 bookings(userId, createdAt DESC)
 bookings(projectId, bookingDate)
 bookings(status)
+bookings(userId, idempotencyKey) UNIQUE
 ```
 
 For production, `locationName` can be retained as a snapshot for historical display, but `projectId` remains the canonical destination reference.
+
+### `refresh_sessions`
+
+The raw refresh token is never stored in MongoDB. It is generated with a cryptographically secure random generator, sent to the browser in the `smart_tour_refresh` HttpOnly cookie, and hashed with SHA-256 before persistence:
+
+```json
+{
+  "userId": "uuid",
+  "tokenHash": "sha256(refresh-token)",
+  "createdAt": "2026-09-01T10:00:00Z",
+  "expiresAt": "2026-10-01T10:00:00Z",
+  "revokedAt": null
+}
+```
+
+The access JWT is not stored in MongoDB. The browser stores it in `localStorage` under `smartTourAuth.token` and sends it as `Authorization: Bearer <jwt>`. The backend verifies its signature, algorithm, required claims, and expiry on every protected request. If only the access token is expired, the frontend calls `/auth/refresh` once and retries the original request. A malformed, forged, or otherwise wrong token is rejected as unauthorized without renewal.
+
+### How booking idempotency is generated
+
+When the user opens the booking confirmation overlay, the frontend generates one random UUID using `crypto.randomUUID()`. That UUID is reused for the confirmation request and any safe retry of that same booking intent:
+
+```text
+Idempotency-Key: 8f0d...random UUID...
+```
+
+The backend separately computes `requestHash` as SHA-256 over the canonical booking details (`projectId`, `bookingDate`, and `numberOfPeople`). The key identifies the booking attempt; the request hash proves that a retry did not change its details. MongoDB's unique `(userId, idempotencyKey)` index is the atomic duplicate guard, so two concurrent requests cannot create two bookings.
 
 ## 11. Recommended Persistence Design
 
@@ -508,7 +549,7 @@ Validation errors return HTTP `422` with field-level details. Unhandled errors r
 - MongoDB persistence is now implemented, but production backup and migration procedures are not yet configured.
 - Development startup seeding updates known location IDs but does not remove obsolete records.
 - OTP verification accepts any non-empty OTP.
-- The JWT default secret is a development fallback and must be replaced through environment configuration.
+- A non-default JWT secret is required outside development and test environments.
 - There is no rate limiting for OTP requests.
 - There are no database migrations or repository integration tests.
 - The backend README references `requirements.txt`, but that file is currently missing and should be added before onboarding or deployment.

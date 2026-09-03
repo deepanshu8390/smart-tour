@@ -18,6 +18,7 @@ export function Footer() {
           </div>
           <div className="navLinks">
             <Link href="/#explore">Explore</Link>
+            <Link href="/project">Destinations</Link>
             <Link href="/login">Login</Link>
             <Link href="/my-bookings">My Bookings</Link>
             <button type="button" onClick={() => setContactOpen(true)}>Contact</button>

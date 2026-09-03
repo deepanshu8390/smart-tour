@@ -38,3 +38,5 @@ coverage/
 # Local runtime files
 *.sqlite3
 *.db
+
+requirements.txt

@@ -24,6 +24,7 @@ export function ContactModal({ open, onClose }) {
   function handleSubmit(event) {
     event.preventDefault();
     setSent(true);
+    window.setTimeout(onClose, 900);
   }
 
   return (

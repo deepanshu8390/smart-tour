@@ -1,6 +1,8 @@
 import { mockBookings, mockLocations } from "./mock-data";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+const pendingLocationRequests = new Map();
+const pendingLocationDetailRequests = new Map();
 
 function normalizePage(value, fallback = 1) {
   return Number.isFinite(value ?? NaN) ? Number(value) : fallback;
@@ -82,45 +84,55 @@ export async function fetchLocations(params) {
   if (params.type) query.set("type", params.type);
   if (params.sort) query.set("sort", params.sort);
 
-  try {
-    return await requestJson(`/locations?${query.toString()}`);
-  } catch (error) {
-    if (!isNetworkError(error)) {
-      throw error;
-    }
-    return filterMockLocations(params);
+  const key = query.toString();
+  if (pendingLocationRequests.has(key)) {
+    return pendingLocationRequests.get(key);
   }
+
+  const request = requestJson(`/locations?${key}`)
+    .catch((error) => {
+      if (!isNetworkError(error)) throw error;
+      return filterMockLocations(params);
+    })
+    .finally(() => pendingLocationRequests.delete(key));
+
+  pendingLocationRequests.set(key, request);
+  return request;
 }
 
 export async function fetchLocation(projectId) {
-  try {
-    return await requestJson(`/locations/${projectId}`);
-  } catch (error) {
-    if (!isNetworkError(error)) {
-      throw error;
-    }
-    const fallback = mockLocations.find((location) => location.projectId === projectId);
-    if (!fallback) {
-      throw new Error("Location not found");
-    }
-    return {
-      ...fallback,
-      similarLocations: mockLocations
-        .filter((item) => item.projectId !== projectId && item.type === fallback.type)
-        .sort((a, b) => b.rating - a.rating)
-        .slice(0, 3)
-        .map(({ projectId: id, type, name, shortDescription, imageUrl, rating, reviewCount, location }) => ({
-          projectId: id,
-          type,
-          name,
-          shortDescription,
-          imageUrl,
-          rating,
-          reviewCount,
-          location,
-        })),
-    };
+  const key = String(projectId);
+  if (pendingLocationDetailRequests.has(key)) {
+    return pendingLocationDetailRequests.get(key);
   }
+
+  const request = requestJson(`/locations/${projectId}`)
+    .catch((error) => {
+      if (!isNetworkError(error)) throw error;
+      const fallback = mockLocations.find((location) => location.projectId === projectId);
+      if (!fallback) throw new Error("Location not found");
+      return {
+        ...fallback,
+        similarLocations: mockLocations
+          .filter((item) => item.projectId !== projectId && item.type === fallback.type)
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, 3)
+          .map(({ projectId: id, type, name, shortDescription, imageUrl, rating, reviewCount, location }) => ({
+            projectId: id,
+            type,
+            name,
+            shortDescription,
+            imageUrl,
+            rating,
+            reviewCount,
+            location,
+          })),
+      };
+    })
+    .finally(() => pendingLocationDetailRequests.delete(key));
+
+  pendingLocationDetailRequests.set(key, request);
+  return request;
 }
 
 export async function sendOtp(payload) {

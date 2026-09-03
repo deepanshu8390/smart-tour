@@ -6,7 +6,7 @@ export function LocationCard({ location, featured = false }) {
       <img className="locationCardImage" src={location.imageUrl} alt={location.name} />
       <div className="locationCardBody">
         <div className="locationCardMeta">
-          <span>{location.type}</span>
+          <span>{location.location} / {location.type}</span>
           <span aria-label={`${location.rating} out of 5 rating`}>★ {location.rating}</span>
         </div>
         <h3 className="locationCardTitle">{location.name}</h3>

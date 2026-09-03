@@ -5,6 +5,7 @@ from app.api import admin, auth, bookings, locations
 from app.core.exceptions import register_exception_handlers
 from app.core.config import settings
 from app.db.seed import seed_data
+from app.db.mongo import close_mongo
 
 
 def create_app() -> FastAPI:
@@ -26,6 +27,10 @@ def create_app() -> FastAPI:
     @app.on_event("startup")
     def _seed() -> None:
         seed_data()
+
+    @app.on_event("shutdown")
+    def _close_mongo() -> None:
+        close_mongo()
 
     @app.get("/health")
     def health() -> dict[str, str]:

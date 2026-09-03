@@ -37,8 +37,9 @@ backend/
 - The backend returns render-ready image values so frontend components stay presentation-only
 
 ## Current Notes
-- The current scaffold uses in-memory repositories for demo behavior
-- The next backend step would be replacing repositories with MongoDB persistence while preserving the same API contracts
+- Local development uses MongoDB through the repository adapters
+- Configure `MONGO_URI` and `MONGO_DATABASE` to use another MongoDB instance
+- The service and API contracts remain independent from the storage implementation
 
 ## Run
 ```bash

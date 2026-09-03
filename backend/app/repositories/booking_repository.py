@@ -1,40 +1,42 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from uuid import uuid4
 
+from app.db.mongo import mongo_database
 from app.repositories.base_booking_repository import BaseBookingRepository
 
 
-@dataclass
 class BookingRepository(BaseBookingRepository):
-    bookings: list[dict] = field(default_factory=list)
+    def __init__(self) -> None:
+        self.collection = mongo_database["bookings"]
+        self.collection.create_index([("userId", 1), ("createdAt", -1)])
+        self.collection.create_index([("projectId", 1), ("bookingDate", 1)])
+        self.collection.create_index("status")
 
     def create(self, booking: dict) -> dict:
-        record = {**deepcopy(booking), "id": str(uuid4())}
-        self.bookings.append(record)
-        return deepcopy(record)
+        record = {
+            **deepcopy(booking),
+            "bookingDate": booking["bookingDate"].isoformat(),
+            "id": str(uuid4()),
+            "createdAt": datetime.now(timezone.utc),
+        }
+        self.collection.insert_one(record)
+        return record
 
     def update(self, booking_id: str, updates: dict) -> dict | None:
-        for index, booking in enumerate(self.bookings):
-            if booking["id"] == booking_id:
-                merged = {**booking, **deepcopy(updates)}
-                self.bookings[index] = merged
-                return deepcopy(merged)
-        return None
+        self.collection.update_one({"id": booking_id}, {"$set": deepcopy(updates)})
+        return self.get_by_id(booking_id)
 
     def get_by_id(self, booking_id: str) -> dict | None:
-        for booking in self.bookings:
-            if booking["id"] == booking_id:
-                return deepcopy(booking)
-        return None
+        return self.collection.find_one({"id": booking_id}, {"_id": 0})
 
     def list_by_user(self, user_id: str) -> list[dict]:
-        return [deepcopy(item) for item in self.bookings if item["userId"] == user_id]
+        return list(self.collection.find({"userId": user_id}, {"_id": 0}).sort("createdAt", -1))
 
     def list_all(self) -> list[dict]:
-        return [deepcopy(item) for item in self.bookings]
+        return list(self.collection.find({}, {"_id": 0}).sort("createdAt", -1))
 
 
 booking_repository = BookingRepository()

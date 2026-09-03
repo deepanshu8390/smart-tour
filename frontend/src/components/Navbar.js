@@ -26,6 +26,7 @@ export function Navbar() {
         </Link>
         <nav className="navLinks" aria-label="Primary">
           <Link href="/#explore">Explore</Link>
+          <Link href="/project">Destinations</Link>
           {auth ? (
             <>
               <span className="muted">{auth.name}</span>

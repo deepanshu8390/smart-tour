@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from uuid import uuid4
+
+from app.db.mongo import mongo_database
 
 
 @dataclass
@@ -13,22 +15,40 @@ class UserRecord:
     role: str
 
 
-@dataclass
 class UserRepository:
-    users: dict[str, UserRecord] = field(default_factory=dict)
+    def __init__(self) -> None:
+        self.collection = mongo_database["users"]
+        self.collection.create_index([("countryCode", 1), ("mobile", 1)], unique=True)
+
+    def _to_record(self, document: dict) -> UserRecord:
+        return UserRecord(
+            id=document["id"],
+            name=document["name"],
+            countryCode=document["countryCode"],
+            mobile=document["mobile"],
+            role=document["role"],
+        )
 
     def get_by_mobile(self, country_code: str, mobile: str) -> UserRecord | None:
-        return next((user for user in self.users.values() if user.countryCode == country_code and user.mobile == mobile), None)
+        document = self.collection.find_one({"countryCode": country_code, "mobile": mobile})
+        return self._to_record(document) if document else None
 
     def upsert(self, name: str, country_code: str, mobile: str, role: str = "USER") -> UserRecord:
-        existing = self.get_by_mobile(country_code, mobile)
-        if existing:
-            existing.name = name
-            existing.role = role or existing.role
-            return existing
-        user = UserRecord(id=str(uuid4()), name=name, countryCode=country_code, mobile=mobile, role=role)
-        self.users[user.id] = user
-        return user
+        user_id = str(uuid4())
+        self.collection.update_one(
+            {"countryCode": country_code, "mobile": mobile},
+            {
+                "$set": {"name": name, "role": role or "USER"},
+                "$setOnInsert": {
+                    "id": user_id,
+                    "countryCode": country_code,
+                    "mobile": mobile,
+                },
+            },
+            upsert=True,
+        )
+        document = self.collection.find_one({"countryCode": country_code, "mobile": mobile})
+        return self._to_record(document)
 
 
 user_repository = UserRepository()

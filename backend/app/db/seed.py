@@ -18,7 +18,7 @@ def seed_data() -> None:
         [
             {
                 "projectId": 101,
-                "type": "goa",
+                "type": "Beach",
                 "name": "Goa",
                 "shortDescription": "Beaches, nightlife, and easy coastal escapes.",
                 "description": "Goa blends relaxed beaches, water sports, old forts, and a laid-back travel vibe.",
@@ -44,7 +44,7 @@ def seed_data() -> None:
             },
             {
                 "projectId": 102,
-                "type": "manali",
+                "type": "Mountains",
                 "name": "Manali",
                 "shortDescription": "Snow views, adventure sports, and mountain air.",
                 "description": "Manali is known for alpine scenery, winter travel, and outdoor adventure activities.",
@@ -68,7 +68,7 @@ def seed_data() -> None:
             },
             {
                 "projectId": 103,
-                "type": "jaipur",
+                "type": "City",
                 "name": "Jaipur",
                 "shortDescription": "Heritage, food, and structured city touring.",
                 "description": "Jaipur offers palaces, forts, bazaars, and a compact city travel experience.",
@@ -92,7 +92,7 @@ def seed_data() -> None:
             },
             {
                 "projectId": 104,
-                "type": "rishikesh",
+                "type": "Adventure",
                 "name": "Rishikesh",
                 "shortDescription": "River adventures, rafting, and wellness stays.",
                 "description": "Rishikesh is a compact destination for adventure and spiritual travel.",
@@ -116,7 +116,7 @@ def seed_data() -> None:
             },
             {
                 "projectId": 105,
-                "type": "andaman",
+                "type": "Beach",
                 "name": "Andaman",
                 "shortDescription": "Clear water, islands, and slower travel days.",
                 "description": "Andaman is suited to travelers who want island scenery and calm beach time.",
@@ -140,7 +140,7 @@ def seed_data() -> None:
             },
             {
                 "projectId": 106,
-                "type": "kashmir",
+                "type": "Mountains",
                 "name": "Kashmir",
                 "shortDescription": "Lakes, valleys, and scenic seasonal travel.",
                 "description": "Kashmir is a high-interest mountain destination with strong visual appeal.",

@@ -1,40 +1,36 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass, field
 
+from app.db.mongo import mongo_database
 from app.repositories.base_location_repository import BaseLocationRepository
 
 
-@dataclass
 class MongoLocationRepository(BaseLocationRepository):
-    """
-    Mongo-style adapter for locations.
-
-    The current scaffold uses an in-memory store, but the service depends on the
-    repository contract rather than direct storage access. This keeps the API
-    layer unchanged when swapped to a real Mongo collection later.
-    """
-
-    documents: dict[int, dict] = field(default_factory=dict)
+    def __init__(self) -> None:
+        self.collection = mongo_database["locations"]
 
     def seed(self, items: list[dict]) -> None:
         for item in items:
-            self.documents[int(item["projectId"])] = deepcopy(item)
+            self.collection.replace_one(
+                {"projectId": int(item["projectId"])},
+                deepcopy(item),
+                upsert=True,
+            )
 
     def count(self) -> int:
-        return len(self.documents)
+        return self.collection.count_documents({})
 
     def list_all(self) -> list[dict]:
-        return [deepcopy(item) for item in self.documents.values()]
+        return list(self.collection.find({}, {"_id": 0}))
 
     def get_by_project_id(self, project_id: int) -> dict | None:
-        item = self.documents.get(project_id)
-        return deepcopy(item) if item else None
+        return self.collection.find_one({"projectId": project_id}, {"_id": 0})
 
     def upsert(self, project_id: int, payload: dict) -> dict:
-        self.documents[project_id] = deepcopy(payload)
-        return deepcopy(payload)
+        document = {**deepcopy(payload), "projectId": project_id}
+        self.collection.replace_one({"projectId": project_id}, document, upsert=True)
+        return document
 
     def delete(self, project_id: int) -> bool:
-        return self.documents.pop(project_id, None) is not None
+        return self.collection.delete_one({"projectId": project_id}).deleted_count > 0

@@ -120,11 +120,11 @@ export function LocationDetailPage({ projectId }) {
                   <form className="stack" onSubmit={handleBookingSubmit}>
                     <label className="field">
                       <span>Travel date</span>
-                      <input value={bookingDate} onChange={(event) => setBookingDate(event.target.value)} type="date" min={today} required />
+                      <input id="travel-date" name="bookingDate" value={bookingDate} onChange={(event) => setBookingDate(event.target.value)} type="date" min={today} required />
                     </label>
                     <label className="field">
                       <span>Travelers</span>
-                      <input value={numberOfPeople} onChange={(event) => setNumberOfPeople(Number(event.target.value))} type="number" min={1} max={20} required />
+                      <input id="travelers" name="numberOfPeople" value={numberOfPeople} onChange={(event) => setNumberOfPeople(Number(event.target.value))} type="number" min={1} max={20} required />
                     </label>
                     <button className="primaryButton" type="submit">Book now</button>
                   </form>

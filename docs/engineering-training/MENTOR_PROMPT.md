@@ -14,6 +14,17 @@ Goal: an **experienced** engineer, not someone who "knows Kafka is used for that
 Experience = struggling with the same kind of problem again and again until the
 solution comes from their own mind.
 
+### The motive, in the learner's own words
+
+> "Mera motive hai ki mujhe experienced banao, sirf ek aisa banda nahi jo jaanta hai
+> ki Kafka kis kaam aata hai. Experience aur struggle se hi sabse achhi learning hoti hai.
+> Jab ek hi problem baar-baar aati hai, tab dimaag khud solution banana seekhta hai.
+> Koi DSA nahi sikha raha, koi Kafka ya RabbitMQ nahi sikha raha — sab kaam karte-karte
+> aana chahiye, jaise company mein AWS roz use hota hai aur 6 mahine baad pata chalta hai
+> ki AWS aa gaya. Tasks tough hone chahiye, Amazon jaisi companies ke level ke."
+
+If a ticket you are about to write would not serve this motive, rewrite it.
+
 ## 1. Learner
 
 - ~7 months FastAPI internship. Works independently; no onboarding needed.
@@ -118,7 +129,31 @@ discovered in the current/previous ticket. Not topic-wise.
 Update `MASTER_PROGRESS.md`, the ticket file, `concept-tracker.md`, `incident-log.md`;
 then commit and push. Unpushed progress does not exist on the next laptop/tool.
 
-## 12. Platform
+## 12. How to create the next ticket (follow every step)
+
+Do this when the current ticket is merged, or when "Up next" in `MASTER_PROGRESS.md`
+has fewer than 2 fully written tickets.
+
+1. **Read the state**: `MASTER_PROGRESS.md`, `concept-tracker.md`, `incident-log.md`,
+   and the last 2–3 ticket files (including their struggle logs and hint levels).
+2. **Read the actual code** as it is now. Never write a ticket from memory or from the README.
+3. **Pick the problem family** that is due (section 5): a family not seen for a while,
+   or one where the last attempt needed hint L3/L4. Note how many times it has appeared;
+   each repeat must be harder and come with less help.
+4. **Check the weekly mix** (section 3): if the last tickets were all backend, this one
+   should be data, AI, infra/incident, or a PR Review.
+5. **Check coverage gaps** in `concept-tracker.md`; prefer a ticket that also closes a gap.
+6. **Find the business problem**: a real thing a customer, PM, on-call alarm, security
+   team or manager would report in this product. The concept must be hidden inside it.
+7. **Make it tough** (section 4): severity, impact, scale numbers, constraints, hidden
+   edge cases, required proof, and what must not break.
+8. **Never name the concept or the solution** in the ticket. Write symptoms and requirements.
+9. **Use `tickets/_TEMPLATE.md`**, save as `tickets/ST-xxx.md`, add it to the `nav` in
+   `mkdocs.yml`, and add its title to "Up next" in `MASTER_PROGRESS.md`.
+10. **Self-check before saving**: Would a real company file this ticket? Can it be
+    solved without struggle? (If yes, make it harder.) Does it serve the motive above?
+
+## 13. Platform
 
 The "company platform" (Redis, Redpanda/Kafka, RabbitMQ, workers, traffic generator) is
 built later by a coding agent per `platform-brief.md` — naive by design, no planted bugs.

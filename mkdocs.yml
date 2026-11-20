@@ -18,6 +18,7 @@ nav:
   - Progress: MASTER_PROGRESS.md
   - Tickets:
       - ST-001: tickets/ST-001.md
+      - Ticket template: tickets/_TEMPLATE.md
   - Incident log: incident-log.md
   - Concept tracker: concept-tracker.md
   - Mentor rules: MENTOR_PROMPT.md

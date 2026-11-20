@@ -40,3 +40,5 @@ coverage/
 *.db
 
 requirements.txt
+# MkDocs build output
+site/

@@ -1,0 +1,8 @@
+{
+  "installCommand": "python3 -m pip install -r docs/requirements-docs.txt",
+  "buildCommand": "python3 -m mkdocs build --strict",
+  "outputDirectory": "site",
+  "redirects": [
+    { "source": "/", "destination": "/MASTER_PROGRESS/", "permanent": false }
+  ]
+}

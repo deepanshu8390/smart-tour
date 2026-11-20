@@ -134,8 +134,11 @@ then commit and push. Unpushed progress does not exist on the next laptop/tool.
 Do this when the current ticket is merged, or when "Up next" in `MASTER_PROGRESS.md`
 has fewer than 2 fully written tickets.
 
-1. **Read the state**: `MASTER_PROGRESS.md`, `concept-tracker.md`, `incident-log.md`,
-   and the last 2–3 ticket files (including their struggle logs and hint levels).
+1. **Read the plan and the state**: `docs/mentor/ROADMAP.md` (default sequence of ticket
+   seeds — take the next seed unless the state below says otherwise), then `MASTER_PROGRESS.md`,
+   `concept-tracker.md`, `incident-log.md`, and the last 2–3 ticket files (including their
+   struggle logs and hint levels). Deviate from the roadmap when the learner's struggle
+   shows a family needs repeating sooner; record the deviation in ROADMAP.md.
 2. **Read the actual code** as it is now. Never write a ticket from memory or from the README.
 3. **Pick the problem family** that is due (section 5): a family not seen for a while,
    or one where the last attempt needed hint L3/L4. Note how many times it has appeared;

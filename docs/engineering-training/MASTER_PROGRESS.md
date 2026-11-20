@@ -19,10 +19,11 @@
 
 ## Up next (titles only; full text written when they come up)
 
-- ST-002 · Incident: anyone can log in with any code
-- ST-003 · Incident: users get logged out randomly
-- ST-004 · The login endpoint is being abused
-- ST-005 · No safety net: nothing tells us when something breaks
+- ST-002 · Security: anyone can log in with any code
+- ST-003 · Users get logged out at random
+- ST-004 · Content team's AI-generated descriptions are sometimes broken
+- ST-005 · SMS bill spiked; the login endpoint is being abused
+- ST-006 · A change broke login and nobody noticed for 2 days
 
 ## Platform
 

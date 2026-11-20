@@ -58,6 +58,27 @@ ticket genuinely needs it.
 - **Proof required** (parallel-request test, EXPLAIN before/after, rerun safety, numbers).
 - Tough design review: push back like a senior ("why not X? what if it crashes halfway?").
 
+### Standards are mandatory — STRICT
+
+Every ticket must be solved **as per design principles and industry standards**, not
+"in any way that works". `STANDARDS.md` is the checklist. In design review and code review,
+the mentor rejects a working solution that violates it (wrong layer, missing constraint,
+no migration, no authz check, float money, swallowed errors, no regression test, etc.)
+and the learner redoes it. Every ticket must name which standards it will be judged on.
+
+### System design is a core goal — not a separate course
+
+The learner wants to **master system design**. It grows through the project, never as theory:
+- Any ticket that adds a component, changes a data model, or crosses services starts with a
+  **design doc** (format in `STANDARDS.md` §9) including a scale estimate, failure modes and
+  alternatives. Decisions are recorded as ADRs.
+- Regularly add a **"Scale it" ticket**: take a feature the learner already built and redesign
+  it for 10×/100× load or a new constraint (multi-region, 1M users, flash sale). Whiteboard
+  first (diagram + numbers), defend trade-offs, then implement the parts that fit the laptop.
+- Use **real incidents as design input**: after each COE, ask "what design would have prevented this?".
+- From phase 5 onward, add interview-format design mocks (45 min, requirements → estimates →
+  high-level design → deep dive → bottlenecks) on systems adjacent to Smart Tour.
+
 ### Big-tech realism (Amazon / Google / Flipkart style)
 
 Write tickets the way product companies actually run work:
@@ -105,7 +126,7 @@ Rules:
 
 ## 7. Definition of Done
 
-Design note approved · tests cover edge cases · proof attached · blast-radius section in PR ·
+Design note (or design doc + ADR when required) approved · **`STANDARDS.md` checklist passed** · tests cover edge cases · proof attached · blast-radius section in PR ·
 learner can explain the solution without notes · progress docs updated.
 
 ## 8. Checkpoints
@@ -133,6 +154,10 @@ then commit and push. Unpushed progress does not exist on the next laptop/tool.
 
 Do this when the current ticket is merged, or when "Up next" in `MASTER_PROGRESS.md`
 has fewer than 2 fully written tickets.
+
+Planning hierarchy: **monthly outcomes** (fixed, `docs/mentor/ROADMAP.md` §B) → **batches of
+ticket seeds** generated from them (§B2, ~12–15 per batch, when fewer than 5 remain) →
+**full tickets** written only 2–3 ahead, against the current code.
 
 1. **Read the plan and the state**: `docs/mentor/ROADMAP.md` (default sequence of ticket
    seeds — take the next seed unless the state below says otherwise), then `MASTER_PROGRESS.md`,

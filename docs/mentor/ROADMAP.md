@@ -9,7 +9,9 @@ checkpoint results. Ticket text is always written fresh against the current code
 
 ---
 
-## A. Ticket backlog (seeds) — first ~3 months
+## A. Ticket seeds
+
+### Batch 1 (written 2026-11-20) — covers months 1–3
 
 Order is the default sequence. Each seed: symptom-style title · family (occurrence) · hidden concepts.
 Mix rule: never 3 tickets in a row from the same area.
@@ -51,25 +53,56 @@ Mix rule: never 3 tickets in a row from the same area.
 Checkpoints: at each month boundary (by date), run a 3-hour broken-system exam built from that
 month's families. Checkpoint 3 = messaging exam (duplicate emails, growing lag, missing invoices).
 
-## B. Phase backbone (months 4–12) — expand into seeds when Section A runs low
+## B. Monthly outcomes — the fixed target; tickets are generated from these
 
-| Phase | Product goal | Families to repeat | AI thread | Ambient environment deepens |
-|---|---|---|---|---|
-| 4 | Fast & reliable | Slowness, Partial failure | RAG over policies/FAQs with citations, "I don't know" | load testing, profiling, metrics/alarms, RDS |
-| 5 | Money moves | Duplicates, Partial failure, Trust | evals for assistant + RAG in CI | payments, saga, reconciliation SQL, Lambda, Secrets Manager |
-| 6 | Split the monolith | Contracts, Partial failure | MCP server for Smart Tour | services, gateway, tracing, ECS/ECR, ALB |
-| 7 | Production on AWS | Contracts, Trust | AI cost/latency, provider fallback, LLM caching | Terraform, VPC, IAM deep, on-call drills, billing incident |
-| 8 | Scale | Race, Stale data, Slowness | streaming responses, AI batch jobs via queues | replicas, distributed locks, WebSockets, autoscaling, K8s basics |
-| 9 | Smart Tour AI | Trust, Partial failure | trip-planner agent with human confirmation, prompt-injection defense | system design practice |
-| 10 | AI you can trust | Trust, Slowness | agent tracing, eval harness, single vs multi-agent | observability for agents |
-| 11 | Hardening | all | security review of AI features | DR restore, zero-downtime migrations, chaos drills, revisit month-1 code |
-| 12 | Show it | all | — | final full-day incident exam, interview stories, mock interviews |
+Each month = an outcome the learner must be able to **demonstrate** (checkpoint exam).
+Outcomes are fixed; tickets are not. "Month" means "until the checkpoint is passed",
+not the calendar — if a checkpoint fails, the month extends.
+
+| Month | Product goal | By the checkpoint, the learner can… | Families | AI thread | Environment deepens | System design |
+|---|---|---|---|---|---|---|
+| 1 | Make it real | run & ship via PRs; secure OTP/JWT auth; design a relational schema and migrate live data; prevent double booking with transactions (proved by parallel test); write pytest + CI; call an LLM with validated structured output | Trust, Race, Contracts, Partial failure | structured output | Git, Docker, CI | first design doc + ADR |
+| 2 | The company grows | work inside an event-driven system; fix cache staleness; build a tool-calling assistant with authz guardrails; deploy to a Linux server and debug "works locally, fails on server"; answer SDE-1 fundamentals interviews | Duplicates, Stale, Contracts, Time | tool calling / first agent | EC2, CloudWatch, S3, Parameter Store | flash-sale "scale it" |
+| 3 | Messaging under fire | fix consumer lag, poison messages, duplicates, ordering, lost events (outbox); replay safely; evolve event schemas; choose Kafka vs RabbitMQ and defend it; build semantic search | Duplicates, Partial failure, Race, Slowness | embeddings + pgvector | CI/CD auto-deploy, SQS comparison | 1M-notification fan-out |
+| 4 | Fast & reliable | find bottlenecks with numbers (load test, profile, EXPLAIN); add retries/timeouts/circuit breakers; metrics + alarms; build RAG with citations and honest "I don't know" | Slowness, Partial failure | RAG | RDS, metrics/alarms | read-heavy scaling |
+| 5 | Money moves | integrate payments (test mode) with verified webhooks; keep booking/payment/invoice consistent (saga); reconcile with SQL; evaluate AI quality in CI | Duplicates, Partial failure, Trust | evals, hallucination measurement | Lambda, Secrets Manager | payments system mock |
+| 6 | Split the monolith | extract services (and justify when not to); trace requests across services; ship an MCP server for Smart Tour | Contracts, Partial failure | MCP | ECS/ECR, ALB, tracing | service boundaries |
+| 7 | Production on AWS | rebuild infra from code; handle on-call incidents and rollbacks; control AI cost/latency with caching and provider fallback | Contracts, Trust | AI in production | Terraform, VPC, IAM | multi-region "scale it" |
+| 8 | Scale | scale horizontally without single-server assumptions; distributed locks/rate limits; live updates via WebSockets; streaming AI responses | Race, Stale, Slowness | streaming, AI batch via queues | autoscaling, replicas, K8s basics | 10× traffic redesign |
+| 9 | Smart Tour AI | build a multi-step trip-planner agent with human confirmation; defend against prompt injection | Trust, Partial failure | agents, guardrails | — | design mocks (45 min) |
+| 10 | AI you can trust | debug agents via traces; measure and improve agent success rate; choose single vs multi-agent | Trust, Slowness | tracing, eval harness | agent observability | design mocks |
+| 11 | Hardening | restore from disaster; change schemas under traffic; run a security review; refactor month-1 code | all | AI security review | DR, chaos drills | design mocks |
+| 12 | Show it | pass a full-day cross-stack incident exam; tell incident stories; pass DSA/LLD/system-design/behavioral mocks | all | — | — | final mocks |
+
+## B2. Batch generation — how new tickets are created
+
+- Section A is **batch 1**. When fewer than 5 seeds remain un-started, generate the **next batch**:
+  ~12–15 seeds covering the remaining outcomes of the current month and the next one.
+- Inputs: the current/next month outcomes (B), progress and struggle logs, incident-log
+  times-to-root-cause per family, concept-tracker gaps, the learner's ideas inbox, and the current code.
+- Each seed: title (symptom) · family (occurrence #) · area · difficulty 1–5 · prerequisites · hidden concepts.
+- Check the batch covers **every** "can…" clause of the target month at least once (twice for weak areas)
+  and keeps the weekly mix (backend / data / AI / infra-incident).
+- Append the batch to Section A with a heading `### Batch N (generated YYYY-MM-DD)`. Keep finished seeds; mark them done.
 
 ## C. Ambient environment ladder (never a ticket of its own; arrives inside tickets)
 
 Git/PR (from ST-001) → Docker compose (ST-001) → CI (ST-006) → EC2 + CloudWatch + Parameter Store (ST-018) →
 S3 (ST-017) → RDS (phase 4) → SQS vs RabbitMQ comparison (inside a messaging ticket) → Lambda (phase 5) →
 ECS/ECR/ALB (phase 6) → Terraform/VPC (phase 7). Always: billing alarm before the first AWS resource.
+
+## D2. System design ladder (woven in; never a lecture)
+
+- ST-007 is the first design doc (relational model) and first ADR.
+- ST-008, ST-022, ST-025, ST-026 require design docs.
+- "Scale it" tickets (insert roughly every 6–8 tickets):
+  - after ST-009: "Flash sale: 10,000 users want 500 seats in 60 seconds" (inventory, queues, locking at scale)
+  - after ST-017: "Bulk imports from 50 partner agencies daily" (async pipelines, S3, backpressure)
+  - after ST-024: "Notifications for 1M users in 5 minutes" (fan-out, partitions, rate limits of providers)
+  - after ST-030: "Smart Tour in 3 regions" (replication, consistency, latency)
+- Phase 5+: 45-minute interview-format mocks (URL shortener → ticket booking → payments → feed → chat),
+  always compared back to what was actually built in Smart Tour.
+- After every COE: "which design would have prevented this?" → candidate ADR.
 
 ## D. Interview DSA pairing
 

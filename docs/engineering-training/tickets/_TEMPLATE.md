@@ -21,6 +21,11 @@ Ask the reporter (your mentor) clarifying questions. Answers are given only when
 - <what must not break: backward compatibility, existing users, zero downtime>
 - <safety: rerunnable, no data loss, no secrets>
 
+## Standards this ticket is judged on
+
+- <sections of STANDARDS.md that apply, e.g. §3 Data (migrations, constraints), §4 Security, §6 Testing>
+- Design doc + ADR required: yes / no
+
 ## Acceptance criteria
 
 - [ ] <observable, testable outcome>

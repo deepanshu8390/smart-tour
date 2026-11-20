@@ -21,6 +21,7 @@ nav:
       - Ticket template: tickets/_TEMPLATE.md
   - Incident log: incident-log.md
   - Concept tracker: concept-tracker.md
+  - Engineering standards: STANDARDS.md
   - Mentor rules: MENTOR_PROMPT.md
   - Platform brief: platform-brief.md
 
